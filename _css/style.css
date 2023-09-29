@@ -1,0 +1,42 @@
+button{
+    cursor: pointer;
+}
+.cs1 {
+    grid-column-start: 1
+}
+
+.cs2 {
+    grid-column-start: 2
+}
+
+.cs3 {
+    grid-column-start: 3
+}
+
+.cs4 {
+    grid-column-start: 4
+}
+
+.ce1 {
+    grid-column-end: span 1
+}
+
+.ce2 {
+    grid-column-end: span 2
+}
+
+.ce4 {
+    grid-column-end: span 4
+}
+
+.rs8 {
+    grid-row-start: 8
+}
+
+.re2 {
+    grid-row-end: span 2
+}
+
+.re3 {
+    grid-row-end: span 4
+}
