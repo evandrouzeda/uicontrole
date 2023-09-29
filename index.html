@@ -101,8 +101,8 @@
             alert("conectado")
             characteristic.startNotifications()
             characteristic.addEventListener('characteristicvaluechanged', (event) => {
-                const value = event.target.value;
-                console.log('Received ' + value);
+                const value = new TextDecoder().decode(event.target.value);
+                console.log('Received ', value);
                 document.getElementById("teste").innerText = value
                 // TODO: Parse Heart Rate Measurement value.
                 // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
