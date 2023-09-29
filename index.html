@@ -10,9 +10,19 @@
 </head>
 
 <body>
-    <p id="teste"></p>
     <div id="botoes" style="display: grid;gap: 1em;grid-template-columns: repeat(4, 1fr);grid-auto-rows: 1em;">
     </div>
+    <div id="clima" style="display: grid;">
+        <div style="display: flex;align-items: center;gap: 1em;">
+            <h3>Temperatura</h3>
+            <p id="temperatura"></p>
+        </div>
+        <div style="display: flex;align-items: center;gap: 1em;">
+            <h3>Humidade</h3>
+            <p id="humidade"></p>
+        </div>
+    </div>
+    <p id="teste"></p>
     <script src="/_script/botoes.js"></script>
     <script>
         let host = window.location.hostname;
@@ -80,7 +90,7 @@
             alert(`Name: ${device.name}`);
 
             await connect()
-            alert(characteristic.writeValue)
+            /* alert(characteristic.writeValue)
             alert(characteristic.writeValueWithoutResponse)
 
             characteristic.writeValue(new TextEncoder().encode('ON'))
@@ -88,7 +98,7 @@
                 .catch(r => alert(`WV catch: ${r}`));
             characteristic.writeValueWithoutResponse(new TextEncoder().encode('agora esta funcionando'))
                 .then(v => alert(`then: ${v}`))
-                .catch(r => alert(`WVWR catch: ${r}`));
+                .catch(r => alert(`WVWR catch: ${r}`)); */
         }
         async function connect() {
             alert("conectando...")
@@ -97,16 +107,26 @@
             const service = await server.getPrimaryService('91bad492-b950-4226-aa2b-4ede9fa42f59');
             if (!service) return alert(service)
             alert("pegando characteristic")
-            characteristic = await service.getCharacteristic('cba1d466-344c-4be3-ab3f-189f80dd7518');
+            //characteristic = await service.getCharacteristic('cba1d466-344c-4be3-ab3f-189f80dd7518');
             alert("conectado")
-            characteristic.startNotifications()
-            characteristic.addEventListener('characteristicvaluechanged', (event) => {
-                const value = new TextDecoder().decode(event.target.value);
-                console.log('Received ', value);
-                document.getElementById("teste").innerText = value
-                // TODO: Parse Heart Rate Measurement value.
-                // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
-            });
+            
+
+            service.getCharacteristic('cba1d466-344c-4be3-ab3f-189f80dd7518')
+                .then(characteristic => characteristic.startNotifications())
+                .then(characteristic => {
+                    characteristic.addEventListener('characteristicvaluechanged', (event) => {
+                        const value = new TextDecoder().decode(event.target.value);
+                        document.getElementById("temperatura").innerText = value;
+                    });
+                })
+            service.getCharacteristic('ca73b3ba-39f6-4ab3-91ae-186dc9577d99')
+                .then(characteristic => characteristic.startNotifications())
+                .then(characteristic => {
+                    characteristic.addEventListener('characteristicvaluechanged', (event) => {
+                        const value = new TextDecoder().decode(event.target.value);
+                        document.getElementById("humidade").innerText = value;
+                    });
+                })
         }
         async function writeValue() {
             const text = document.getElementById("msg").value
