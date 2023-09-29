@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div style="display: flex;align-items: center;gap: 1em;"><h4>Status</h4><span>desconectado</span></div>
+    <div style="display: flex;align-items: center;gap: 1em;"><h4>Status</h4><span id="status">desconectado</span></div>
     <div id="botoes" style="display: grid;gap: 1em;grid-template-columns: repeat(4, 1fr);grid-auto-rows: 1em;">
     </div>
     <div id="clima" style="display: grid;">
@@ -46,11 +46,11 @@
                 request.open('POST', 'http://' + host + '/send', true);
                 request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                 request.send(`code=${botao.value}`);
-            }
+            }*/
             navigator.vibrate(200);
             setTimeout(() => {
                 if (pressing) send(botao);
-            }, 1000); */
+            }, 1000);
         };
         function start(botao) {
             pressing = true;
@@ -85,7 +85,7 @@
                         '91bad492-b950-4226-aa2b-4ede9fa42f59', 
                         'cba1d466-344c-4be3-ab3f-189f80dd7518', //temperatura
                         'ca73b3ba-39f6-4ab3-91ae-186dc9577d99', //humidade
-                        'f78ebbff-c8b7-4107-93de-889a6a06d408', //write
+                        '7de27b1b-1a3b-4f7b-b712-e9a630e165da', //write
                     ]
                 });
                 device.ongattserverdisconnected = (e) => {
@@ -117,11 +117,11 @@
             const service = await server.getPrimaryService('91bad492-b950-4226-aa2b-4ede9fa42f59');
             if (!service) return alert(service)
             status.innerText = "pegando characteristic"
-            characteristic = await service.getCharacteristic('f78ebbff-c8b7-4107-93de-889a6a06d408');
+            characteristic = await service.getCharacteristic('7de27b1b-1a3b-4f7b-b712-e9a630e165da');
             status.innerText = "conectado"
             
 
-            service.getCharacteristic('cba1d466-344c-4be3-ab3f-189f80dd7518')
+            /* service.getCharacteristic('cba1d466-344c-4be3-ab3f-189f80dd7518')
                 .then(characteristic => characteristic.startNotifications())
                 .then(characteristic => {
                     characteristic.addEventListener('characteristicvaluechanged', (event) => {
@@ -136,12 +136,12 @@
                         const value = new TextDecoder().decode(event.target.value);
                         document.getElementById("humidade").innerText = value;
                     });
-                })
+                }) */
         }
         async function writeValue(text) {
             //const text = document.getElementById("msg").value
             characteristic.writeValue(new TextEncoder().encode(text))
-                .then(v => alert(`then: ${v}`))
+                //.then(v => alert(`then: ${v}`))
                 .catch(r => alert(`catch: ${r}`));
         }
     </script>
