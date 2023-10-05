@@ -36,8 +36,8 @@
                 requestDevices()
             }else 
             if (botao.path) {
-                writeValue(botao.path)
-            }else writeValue(botao.value)
+                writeValue("vol", botao.path)
+            }else writeValue("ir",botao.value)
             /* var request = new XMLHttpRequest();
             if (botao.path) {
                 request.open('GET', `http://${host}/${botao.path}`);
@@ -72,7 +72,9 @@
         });
     </script>
     <script>
+        const typeCharacteristic = {}
         var characteristic
+        var volumeCharacteristic
         var device
         async function requestDevices() {
             console.log("entrou no request")
@@ -115,8 +117,9 @@
             if (!server) return alert(server)
             const service = await server.getPrimaryService('91bad492-b950-4226-aa2b-4ede9fa42f59');
             if (!service) return alert(service)
-            status.innerText = "pegando characteristic"
-            characteristic = await service.getCharacteristic('7de27b1b-1a3b-4f7b-b712-e9a630e165da');
+            status.innerText = "pegando characteristics"
+            typeCharacteristic["ir"] = await service.getCharacteristic('7de27b1b-1a3b-4f7b-b712-e9a630e165da');
+            typeCharacteristic["vol"] = await service.getCharacteristic('a9a76a4e-92dd-4150-939d-a9d9f31c5c2e');
             status.innerText = "conectado"
             
 
@@ -137,9 +140,10 @@
                     });
                 }) */
         }
-        async function writeValue(text) {
+        
+        async function writeValue(characteristic, text) {
             //const text = document.getElementById("msg").value
-            characteristic.writeValue(new TextEncoder().encode(text))
+            typeCharacteristic[characteristic].writeValue(new TextEncoder().encode(text))
                 //.then(v => alert(`then: ${v}`))
                 .catch(r => alert(`catch: ${r}`));
         }
