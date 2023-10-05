@@ -72,6 +72,7 @@
         });
     </script>
     <script>
+        const status = document.getElementById("status")
         const typeCharacteristic = {}
         var characteristic
         var volumeCharacteristic
@@ -97,7 +98,7 @@
             }
             if (!device) return alert("Erro ao conectar...");
 
-            alert(`Name: ${device.name}`);
+            status.innerText = `Name: ${device.name}`;
 
             await connect()
             /* alert(characteristic.writeValue)
@@ -111,7 +112,7 @@
                 .catch(r => alert(`WVWR catch: ${r}`)); */
         }
         async function connect() {
-            const status = document.getElementById("status")
+            
             status.innerText = "conectando..."
             const server = await device.gatt.connect()
             if (!server) return alert(server)
@@ -145,7 +146,7 @@
             //const text = document.getElementById("msg").value
             typeCharacteristic[characteristic].writeValue(new TextEncoder().encode(text))
                 //.then(v => alert(`then: ${v}`))
-                .catch(r => alert(`catch: ${r}`));
+                //.catch(r => alert(`catch: ${r}`));
         }
     </script>
 </body>
